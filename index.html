@@ -53,5 +53,52 @@
             </p>
         </div>
     </section>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const calculateBtn = document.querySelector('.two button');
+    const resultSection = document.querySelector('.three');
+    const resultHeading = resultSection.querySelector('h2');
+    const resultText = resultSection.querySelector('p');
+
+    calculateBtn.addEventListener('click', function () {
+        // Get user inputs
+        const mortgageAmount = parseFloat(document.getElementById('four').value.replace(/[^0-9.]/g, ''));
+        const mortgageTerm = parseFloat(document.getElementById('five').value.replace(/[^0-9.]/g, ''));
+        const interestRate = parseFloat(document.getElementById('six').value.replace(/[^0-9.]/g, '')) / 100;
+
+        const repaymentRadio = document.getElementById('repay');
+        const interestOnlyRadio = document.getElementById('only');
+
+        // Validate inputs
+        if (isNaN(mortgageAmount) || isNaN(mortgageTerm) || isNaN(interestRate)) {
+            resultHeading.textContent = 'Invalid Input';
+            resultText.textContent = 'Please fill out all fields correctly to calculate your repayment.';
+            return;
+        }
+
+        let monthlyRepayment = 0;
+
+        if (repaymentRadio.previousElementSibling.checked) {
+            // Repayment Mortgage Calculation
+            const monthlyInterestRate = interestRate / 12;
+            const totalPayments = mortgageTerm * 12;
+
+            monthlyRepayment = (mortgageAmount * monthlyInterestRate) /
+                (1 - Math.pow(1 + monthlyInterestRate, -totalPayments));
+
+        } else if (interestOnlyRadio.previousElementSibling.checked) {
+            // Interest-Only Mortgage Calculation
+            monthlyRepayment = mortgageAmount * (interestRate / 12);
+        }
+
+        // Display result
+        resultHeading.textContent = 'Your Monthly Repayment';
+        resultText.textContent = `£${monthlyRepayment.toFixed(2)}`;
+    });
+});
+
+    </script>
 </body>
 </html>
